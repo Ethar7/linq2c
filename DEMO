@@ -1,0 +1,500 @@
+﻿using System.Collections;
+using System.Collections.Frozen;
+using System.Collections.Immutable;
+using System.ComponentModel;
+using System.Linq;
+using System.Text.RegularExpressions; 
+using static Demo.ListGenerator;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Demo
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            ///.net 7 mfe4 new Linq Operators 3mlna Optimize lehom bs
+            ///Kol Nov By3mlo new version
+            ///
+
+            #region Element Operators - Immediate Execution
+
+            //Valied Only ON fluent Syntax 
+
+            #region First | Last , FirstOrDefault | LastOrDefault Part01
+
+            ///---First Overload---
+            /// First | Last  have 2 Overloads 
+
+            //var Result = ProductList.First();
+            //Result = ProductList.Last();
+
+            ///---Second Overload ---
+            ///FirstOrDefault |LastOrDefault hve 4 Overloads 
+            ///Lw ana 3mlt new object fl list el 2 hy throw Exceptions
+            ///Kol 1 mn El Second Lehom 4 overloads
+
+            //ProductList = new List<Product>();
+            ////var Result = ProductList.Last();
+            ////Console.WriteLine(Result.ProductName);
+            //
+            //var Result = ProductList.FirstOrDefault();
+            //Result = ProductList.LastOrDefault();
+            //Console.WriteLine(Result?.ProductName?? "Not Available");
+            //Result = ProductList.LastOrDefault(new Product() { ProductName="Alaa"});
+            //Console.WriteLine(Result.ProductName);
+
+            #endregion
+
+            #region First | Last , FirstOrDefault | LastOrDefault Part02
+            //var Result = ProductList.First(p => p.UnitsInStock == 0);
+            //Result = ProductList.Last(p => p.UnitsInStock == 0);
+            //
+            //ProductList = new List<Product>();
+            //Result =ProductList.FirstOrDefault(p => p.UnitsInStock==0);
+            //Result =ProductList.LastOrDefault(p => p.UnitsInStock>1000);
+            //Console.WriteLine(Result?.ProductName??"NA");
+
+            #endregion
+
+            #region ElementAt | ElementAtOrDefault
+            ////First Overload At .net 6 {var Result = ProductList.ElementAt(10);}
+            //var Result = ProductList.ElementAt(10);
+            //Result = ProductList.ElementAt(new Index(10));
+            //Result = ProductList.ElementAt(new Index(10,true));//lw 3wza NUM FROM Last 
+            //Result = ProductList.ElementAt(^10);  //Syntax Sugar lw 3wza NUM FROM Last 
+            //
+            //Result=ProductList.ElementAtOrDefault(^10);
+            //
+            //Console.WriteLine(Result); 
+            #endregion
+
+            #region Single | SingleOrDefult part01
+            //It wil Throw Exception If It ContainS More Than 1 eLEMENT Or null
+            //var Result = ProductList.Single(); 
+            //List<Product> Products = new List<Product>();
+            //var Result = Products.SingleOrDefault();
+            //Result  = Products.SingleOrDefault(new Product {ProductName="Alaa"});
+
+            // Console.WriteLine(Result); 
+            #endregion
+
+            #region Single | SingleOrDefult part02
+            //var Result = ProductList.Single(P => P.ProductId == 10);
+            ////If 0 or More Elements Doesn't Match The Condition It will Throw An Exception
+            //
+            //Result=ProductList.SingleOrDefault(P => P.ProductId >1000);
+            ////Result=ProductList.SingleOrDefault(P => P.ProductId >1); 
+            ////It will Throw Exception
+            //
+            //Result = ProductList.SingleOrDefault(P => P.ProductId > 1000, new Product {ProductName="Hamada" });
+            //Console.WriteLine(Result);
+
+
+            #endregion
+
+            #region Interview Question
+            //var FOD = ProductList.FirstOrDefault(P => P.ProductId == 10);
+            //var SOD = ProductList.SingleOrDefault(P => P.ProductId == 10);
+
+            ////lW Ana 3wza Aktb El FirstOrDefault and SingleOrDefault By SQL
+            ////FOD  =>  Select Top 1
+            ////SOD  =>  Select Top 2
+
+            #endregion
+
+            // Hybrid Syntax : (Query Expression).Fluent Syntax
+            //var Result = (from p in ProductList
+            //             where p.UnitsInStock == 0
+            //             select p) .FirstOrDefault();
+            //
+            //Console.WriteLine(Result);
+            #endregion
+
+            #region Aggregation Operators - Immediate Execution
+
+            #region Count(),TryGetNonEnumeratedCount() {.Net 6.0 New Feature}
+
+            ///ProductList.Count() Vs ProductList.Count;
+            ///ANa 3ndy El property Count W Method Count Lw 3ndy Collection Fe Elproperty yb2a Ast5dm Elproperty 34an El TC O(1) El Method O(n)
+
+            ///By .net 9 Hyb2a 3ndY CountBy()
+
+
+            ///EX -- Using LINQ Operator Count
+
+            //IEnumerable<int> Numbers = Enumerable.Range(0, 100);
+            //Numbers.Count();///  34an M3nde4 Object Hro7 A Enumerate 3leha Hro7 a count El elements so TC O(n)
+            //var Result = Numbers.Count();
+            //Console.WriteLine(Result);
+            //
+            //Result = ProductList.Where(P => P.UnitsInStock == 0).Count();
+            //Result = ProductList.Count(P => P.UnitsInStock == 0);//Overload
+            //
+            //ProductList.Where(P => P.UnitsInStock == 0).TryGetNonEnumeratedCount(out Result);//.net 6
+            ////De Lazm T4t8l M3 Object  34an hYA m4 Bt3ml Enumerate Btro T acess Direct
+            ////Kda Ana Momkn Ast5dm TryGetNonEnumeratedCount Aw El Count Property If Exist
+            //Console.WriteLine(Result);
+
+
+            #endregion
+
+            #region Sum() , Average()
+            //var Result = ProductList.Sum(P => P.UnitPrice);
+            //Result = ProductList.Average(P => P.UnitPrice);
+            //
+            //Console.WriteLine(Result);
+
+            #endregion
+
+            #region Max() , Min()  {First Overloads }, MaxBy() , MinBy() {.net 6 New Features}
+            ////hYgeb el Max W MiN According To Price 34an Ana 5letha T Implement According to Price 
+            //var Result = ProductList.Max();
+            //Result = ProductList.Min();
+            ////Overlaod 2
+            //Result = ProductList.Max(new ProductComparer());
+            //Result = ProductList.Min(new ProductComparer());
+            ////Another Way For The 2 Overloads
+            //  Result = ProductList.OrderByDescending(P=>P.UnitPrice).FirstOrDefault();   //Max ()   
+            //  Result = ProductList.OrderByDescending(P=>P.UnitsInStock).FirstOrDefault();//Max (new ProductComparer())    
+            //  Result = ProductList.OrderBy(P=>P.UnitPrice).FirstOrDefault();   //Min ()
+            //  Result = ProductList.OrderBy(P=>P.UnitsInStock).FirstOrDefault();//Min (new ProductComparer())
+            //
+            //
+            ////MAXbY - MinBy .net 6
+            //// M4 M7taga a3ml Implement LL IComparer
+            //
+            //Result = ProductList.MinBy(P => P.UnitPrice);
+            // Result = ProductList.MaxBy(P => P.UnitsInStock,new IntComparer());
+            //
+            //Console.WriteLine(Result); 
+            #endregion
+
+            #region Max() , Min() {Other Overloads}
+            //var Result = ProductList.Max(P => P.UnitPrice);
+            //Result = ProductList.Min(P => P.UnitPrice);
+            //
+            //var Result01 =ProductList.Min(P => P.ProductName);
+            //Console.WriteLine(Result01); 
+            #endregion
+
+            #region Aggregate()
+            // My Own Aggregation Function
+            //string[] Names = { "Ahmed", "Nasr", "Eldin", "Mohamed" };
+            ////Overload 1
+            //string FullName = Names.Aggregate((str1, str2) => $"{str1} {str2}");
+            ////Overload 2
+            //FullName = Names.Aggregate("Hello", (str1, str2) => $"{str1} {str2}");
+            ////Overload 3
+            //FullName = Names.Aggregate("Hello", (str1, str2) => $"{str1} {str2}",(Taccumulator) => Taccumulator.Replace(' ','_'));
+            //
+            //Console.WriteLine(FullName); 
+            #endregion
+
+            #region CountBy(), AggregateBy {in .net 9}
+            //var Orders = new List<Order>();
+            ////Uncomment CustomerId Property In Order Class
+            //var data = Orders.OrderBy(x => x.CustomerId).ToList()
+            //                 .CountBy(Order => Order.CustomerId);
+            //     
+            #endregion             //Mwgoda F .net 9
+
+
+            #endregion
+
+            #region Conversions (Casting) Operators - Immediate Execution
+
+            #region Search On 
+            //var Result = ProductList.ToLookup();
+            //var Result = ProductList.ToFrozenDictionary();
+            #endregion
+
+            // var Result = ProductList.Where(p=>p.UnitsInStock==0).ToList();
+            // //To List 34an Aab2a M5znaha F 7aga 34an Lw H process 3Leha 
+            // 
+            // Dictionary<long,Product>dictionary =ProductList.Where(p=>p.UnitsInStock==0)
+            //     .ToDictionary(p => p.ProductId);
+            // dictionary =ProductList.Where(p=>p.UnitsInStock==0)
+            //     .ToDictionary(p => p.ProductId,new CustomeEqualityCompare());//To Override on GetHashCode , ToString
+            //
+            //
+            // Dictionary<long, string?> dictionary01 = ProductList.Where(p => p.UnitsInStock == 0)
+            //     .ToDictionary(p => p.ProductId, p => p.ProductName);
+            // dictionary01 = ProductList.Where(p => p.UnitsInStock == 0)
+            //     .ToDictionary(p => p.ProductId, p => p.ProductName, new CustomeEqualityCompare());
+
+
+            //HashSet<Product> hashset = ProductList.Where(p => p.UnitsInStock == 0).ToHashSet();
+            //hashset = ProductList.Where(p => p.UnitsInStock == 0).ToHashSet(new CustomeEqualityCompare());
+
+            //var SortedCollection = ProductList.Where(p => p.UnitsInStock == 0).ToImmutableSortedSet();
+            //
+            //SortedCollection.Add(new Product { ProductName = "Alaa" });
+            //
+            //foreach (var product in SortedCollection)
+            //{
+            //    Console.WriteLine(product);
+            //}
+            //OfType () => operator is used to return the element of the specific type, and Other Elements will be ignored from the list or collection.
+
+            //ArrayList Result = new ArrayList()
+            //{
+            //    "Alaa"
+            //    ,"Osama"
+            //    ,"Jayda"
+            //    ,1,2,5,4
+            //
+            //};
+            //
+            //var result =Result.OfType<int>();
+            //
+            //
+            //oreach (var item in Result)
+            //
+            //   Console.WriteLine(item);
+            //
+            #endregion
+
+            #region Generation Operators -Deferred Execution
+            //The Only Way ForCalling These Opeartors => Is As Static Methods Through  Enumerable Class
+            //m4 bst5dmha fl query expression
+
+            //var Result = Enumerable.Range(0,100);//Sequence start from 0 to 100
+            //var Result = Enumerable.Repeat/*<int>*/(new Product() { Category ="Meat"},200);//Compli;er Can Detetct int
+
+
+            //var Result = Enumerable.Empty<Product>();
+            //foreach (var item in Result) 
+            //{ 
+            //    Console.Write ($"{item}\t");
+            //}
+
+            #endregion
+
+            #region Set Operators- Union Family Operators -Deferred Execution
+            #region EX01
+            //var Scq01 = Enumerable.Range(0, 100);
+            //var Scq02 = Enumerable.Range(50, 100);
+            //var Result = Scq01.Union(Scq02);//Merging with RemovinG DUPLICATES
+            //Result = Scq02.Concat(Scq02);//Merging without RemovinG DUPLICATES
+            //Result = Result.Distinct();//Filtration Operator
+            //Result = Scq01.Intersect(Scq02);
+            //Result = Scq01.Except(Scq02);
+            //
+            //foreach (var result in Result)
+            //    Console.Write($"{result}\t"); 
+            #endregion
+            #region EX02
+
+            //var s1 = new List<Product>()
+            //{
+            //     new Product() {ProductId = 1, ProductName = "Chai", Category = "Beverages",
+            //        UnitPrice = 18.00M, UnitsInStock = 100},
+            //     new Product{ ProductId = 6, ProductName = "Grandma's Boysenberry Spread", Category = "Condiments",
+            //        UnitPrice = 25.0000M, UnitsInStock = 120 },
+            //     new Product{ ProductId = 7, ProductName = "Uncle Bob's Organic Dried Pears", Category = "Produce",
+            //        UnitPrice = 30.0000M, UnitsInStock = 15 },
+            //     new Product{ ProductId = 8, ProductName = "Northwoods Cranberry Sauce", Category = "Condiments",
+            //        UnitPrice = 40.0000M, UnitsInStock = 6 },
+            //
+            //};
+            //var s2 = new List<Product>() 
+            //{
+            //     new Product() {ProductId = 1, ProductName = "Chai", Category = "Beverages",
+            //        UnitPrice = 18.00M, UnitsInStock = 100},
+            //     new Product{ ProductId = 2, ProductName = "Chang", Category = "Beverages",
+            //        UnitPrice = 19.0000M, UnitsInStock = 17 },
+            //     new Product{ ProductId = 3, ProductName = "Aniseed Syrup", Category = "Condiments",
+            //        UnitPrice = 10.0000M, UnitsInStock = 13 },
+            //     new Product{ ProductId = 4, ProductName = "Chef Anton's Cajun Seasoning", Category = "Condiments",
+            //        UnitPrice = 22.0000M, UnitsInStock = 53 }
+            //};
+
+            ///var Result = s1.Union(s2);//Asht8lt S7 34an Ana 3mla Override LL GetHashCode
+            ///Result = s1.Union(s2, new ProductEqualityComparer());//Overload 2
+            ///Result = s1.UnionBy(s2, /*which Property*/P => P.ProductId); //Hya Nfs El FO2
+            ///Result = s1.UnionBy(s2, P => P.Category,new CategoryEqualityComparer()); 
+
+
+            ///var Result = s1.Intersect(s2);
+            ///Result = s1.Intersect(s2, new ProductEqualityComparer());
+            ///Result = s1.IntersectBy(s2.Select(p => p.UnitPrice),P=>P.UnitPrice);//De Flexability
+
+            ///var Result = s1.Except(s2);
+            ///Result = s1.Except(s2,new ProductEqualityComparer());
+            ///Result = s1.ExceptBy(s2.Select(p => p.UnitPrice),P=>P.UnitPrice);//De Flexability
+
+            ///var Result = s1.Distinct();
+            ///Result = s1.Distinct(new ProductEqualityComparer());
+            ///Result = s1.DistinctBy(p=>p.ProductId);
+
+
+
+            //foreach (var item in Result)
+            //{
+            //    Console.WriteLine(item);
+            //} 
+            #endregion
+            #endregion
+
+            #region Quantifier Operator - Return Boolean Value
+            //var Product = new Product()
+            //{
+            //    ProductId = 2,
+            //    ProductName = "Chai",
+            //    Category = "Beverages",
+            //    UnitPrice = 18.00M,
+            //    UnitsInStock = 100
+            //};
+
+            //Console.WriteLine(
+            //ProductList.Any()//Return True If Sequence Just Contain AtLeast One Element
+            //ProductList.Any(p=>p.UnitsInStock==0)// Any = Exist in List
+            ////Lw Elsequence Remote Must Use Any 
+            //ProductList.All(P=>P.UnitsInStock>0)
+            //ProductList.Contains(Product)
+            //ProductList.Contains(Product,new ProductEqualityComparer())
+            //SequenceAll //Based On Equals And GetHashCode Applied ON Union Family Operator Example01
+
+
+            // );
+            #endregion
+
+            #region Transformation Operators - Zip
+            //List<string>w=new List<string>() {"Ten","Twenty","Thirty" };
+            //int [] n={10,20,30,40 };
+            //
+            //var Result1=n.Zip(w);
+            //
+            //var Result=n.Zip(w,(Number,Words)=>$"{Number} = {Words}");
+            //var Result2=n.Zip(w,[10,20 ]);//C#  10.0 New Feature
+            //foreach (var i in Result2)
+            //    Console.WriteLine(i);
+            #endregion
+
+            #region Grouping Operators - GroupBy , Chunk
+            // It's Easier To WRITE Query Expression
+            //El Query Expression Must Ended with select or Group by 
+
+            ///var Result = from p in ProductList
+            ///             group p by p.Category;
+            ///
+            ///Result = ProductList.GroupBy(p => p.Category);
+            ///
+            ///foreach (var group in Result) 
+            ///{
+            ///    Console.WriteLine(group.Key);//Category
+            ///    foreach(var Product in group)
+            ///        Console.WriteLine($"''''{Product}");
+            ///}
+            ///
+
+            ///var Result = from p in ProductList
+            ///             where p.UnitsInStock > 0
+            ///             group p by p.Category
+            ///             into ProductGroup
+            ///             where ProductGroup.Count() > 10
+            ///             select new { Category = ProductGroup.Key ,Count = ProductGroup .Count()};
+            ///
+            ///Result = ProductList.Where(p => p.UnitsInStock > 0).GroupBy(P => P.Category).Where(pg => pg.Count() > 10)
+            ///                   .Select(pg => new { Category = pg.Key, Count = pg.Count() });
+            ///foreach (var item in Result)
+            ///{
+            ///    Console.WriteLine(item);
+            ///}
+
+            ///var Result01 = ProductList.GroupBy(p => p.Category);//Overload 1
+            ///var Result02 = ProductList.GroupBy(p => p.Category, new StringEqulityComparer());//Bavarge , bavarge the same
+            ///
+            ///var Result03 = ProductList.GroupBy(p => p.Category, P => P.ProductName);//To View Only ProductName or new{P.ProductName,P.ProductId}
+            ///var Result04 = ProductList.GroupBy(p => p.Category, P => P.ProductName, new StringEqulityComparer());
+            ///
+            ///var Result05 = ProductList.GroupBy(p => p.Category, /*Returning Type*/(Key, Product) => new { Category = Key, Count = Product.Count() });
+            ///var Result06 = ProductList.GroupBy(p => p.Category, /*Returning Type*/(Key, Product) => new { Category = Key, Count = Product.Count() }, new StringEqulityComparer());
+            ///
+            ///var Result07 = ProductList.GroupBy(p => p.Category, P => new { P.ProductName, P.ProductId }, (Key, Product) => new { Category = Key,  Product });
+            ///var Result08 = ProductList.GroupBy(p => p.Category, P => new { P.ProductName, P.ProductId }, (Key, Product) => new { Category = Key,  Product }, new StringEqulityComparer());
+            ///foreach (var group in Result08)
+            ///{
+            ///    Console.WriteLine(group.Category);
+            ///    foreach (var Product in group.Product)
+            ///        Console.WriteLine($"''''{Product}");
+            ///}
+
+
+            /// var Result = from p in ProductList
+            ///              group p by p.Category
+            ///               into Groupprod
+            ///              from newP in Groupprod
+            ///              select new { Category = Groupprod.Key, Product = new { newP.ProductId, newP.ProductName } };
+            ///
+            ///
+            ///foreach(var item  in Result)
+            ///    Console.WriteLine(item );
+
+
+
+            #endregion
+
+            #region Partitioning Operators - Take , Skip , TakeLast , SkipLast , TakeWhile , SkipWhile
+
+            #region  Take , Skip , TakeLast , SkipLast 
+            // var Res = ProductList.Where(p => p.UnitsInStock > 0).Take(2);
+            // var Res01 = ProductList.Where(p => p.UnitsInStock > 0).Take(new Range (0,4));
+            // Res = ProductList.Where(p => p.UnitsInStock > 0).TakeLast(2);
+            //
+            // Res=ProductList.Where(P=>P.UnitsInStock == 0).Skip(2);
+            // Res=ProductList.Where(P=>P.UnitsInStock == 0).SkipLast(2);
+            //
+            //
+            // var PageSize = 10;
+            // var PageIndex = 4;
+            // Res=ProductList.Where(P=>P.UnitsInStock>0)
+            //     .Skip(PageSize*(PageIndex-1)).Take(PageSize); 
+            #endregion
+
+            #region TakeWhile ,SkipWhile
+            //int[] nums = { 1, 2, 2, 3, 3, 10, 9, 10 };
+            ////Get The Element Starting From The Begining  Of The Array Until A Number is hit the Condition
+            ////Less Than It'S Position In The Array.
+            //
+            //var Result = nums.TakeWhile((num, index) => num > index);
+            //
+            ////Get The Element Starting From The First ELement Divisible by 3
+            // var Result01=nums.SkipWhile(num=>num%3!=0);
+            // foreach (var Unit in Result01)
+            //    Console.WriteLine(Unit); 
+            #endregion
+
+            #endregion
+
+            #region Let - Into
+            //var list = new List<string>() { "Alaa", "Ahmed", "Mahmoud", "Hajar" };
+            //
+            //var Result =
+            //    from n in list
+            //    select Regex.Replace(n, "[aieouAIEOU]", string.Empty/*""*/)
+            //    //Restart Query With Introducing New Range Variable : NoVoName
+            //    into NoVolName
+            //    where NoVolName.Length > 3
+            //    select NoVolName;
+            //
+            //    Result =
+            //    from n in list
+            //    let NoVolName = Regex.Replace(n, "[aieouAIEOU]", string.Empty/*""*/)
+            //    //Continue Query With Add Range Variable : NoVolName
+            //    where NoVolName.Length > 3
+            //    select NoVolName;
+            //
+            //Result = list.Select(n=> Regex.Replace(n, "[aieouAIEOU]", string.Empty/*""*/)).Where(NoVolName=>NoVolName.Length > 3);
+            //foreach (var name in Result)
+            //{
+            //    Console.WriteLine(name);
+            //}
+            #endregion
+
+
+
+        }
+    }
+}
