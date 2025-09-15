@@ -1,1 +1,172 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace LINQ_Assignment02
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // call kol el methods 3ashan orakb el results
+            AggregateOperators();
+            ElementOperators();
+            SetOperators();
+            PartitioningOperators();
+            Quantifiers();
+            GroupingOperators();
+        }
+
+        #region Aggregate Operators
+        static void AggregateOperators()
+        {
+            Console.WriteLine("=== Aggregate Operators ===");
+
+            // 1- total units in stock per category
+            var totalUnits = from p in ListGenerators.ProductsList
+                             group p by p.Category into g
+                             select new { Category = g.Key, Total = g.Sum(p => p.UnitsInStock) };
+
+            // 2- cheapest price per category
+            var minPrices = from p in ListGenerators.ProductsList
+                            group p by p.Category into g
+                            select new { Category = g.Key, MinPrice = g.Min(p => p.UnitPrice) };
+
+            // 3- products bel min price per category
+            var cheapestProducts = from p in ListGenerators.ProductsList
+                                   group p by p.Category into g
+                                   let minPrice = g.Min(p => p.UnitPrice)
+                                   select new { Category = g.Key, Products = g.Where(p => p.UnitPrice == minPrice) };
+
+            // 4- most expensive price per category
+            var maxPrices = from p in ListGenerators.ProductsList
+                            group p by p.Category into g
+                            select new { Category = g.Key, MaxPrice = g.Max(p => p.UnitPrice) };
+
+            // 5- products bel max price per category
+            var expensiveProducts = from p in ListGenerators.ProductsList
+                                    group p by p.Category into g
+                                    let highestPrice = g.Max(p => p.UnitPrice) // changed el name 3ashan el conflict
+                                    select new { Category = g.Key, Products = g.Where(p => p.UnitPrice == highestPrice) };
+
+            // 6- avg price per category
+            var avgPrices = from p in ListGenerators.ProductsList
+                            group p by p.Category into g
+                            select new { Category = g.Key, AvgPrice = g.Average(p => p.UnitPrice) };
+        }
+        #endregion
+
+        #region Element Operators
+        static void ElementOperators()
+        {
+            Console.WriteLine("=== Element Operators ===");
+
+            // 1- awel product out of stock
+            var firstOut = ListGenerators.ProductsList.FirstOrDefault(p => p.UnitsInStock == 0);
+
+            // 2- awel product > 1000 aw else null
+            var firstExpensive = ListGenerators.ProductsList.FirstOrDefault(p => p.UnitPrice > 1000);
+
+            // 3- talet number > 5 (skip 1)
+            int[] arr = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            var secondGreaterThan5 = arr.Where(n => n > 5).Skip(1).FirstOrDefault();
+        }
+        #endregion
+
+        #region Set Operators
+        static void SetOperators()
+        {
+            Console.WriteLine("=== Set Operators ===");
+
+            // 1- unique category names
+            var categories = ListGenerators.ProductsList.Select(p => p.Category).Distinct();
+
+            // 2- unique first letter mn products + customers
+            var firstLetters = ListGenerators.ProductsList.Select(p => p.ProductName[0])
+                .Union(ListGenerators.CustomersList.Select(c => c.CustomerName[0]));
+
+            // 3- common first letters
+            var commonLetters = ListGenerators.ProductsList.Select(p => p.ProductName[0])
+                .Intersect(ListGenerators.CustomersList.Select(c => c.CustomerName[0]));
+
+            // 4- product letters not in customer letters
+            var productOnly = ListGenerators.ProductsList.Select(p => p.ProductName[0])
+                .Except(ListGenerators.CustomersList.Select(c => c.CustomerName[0]));
+
+            // 5- last 3 chars from products and customers
+            var last3 = ListGenerators.ProductsList.Select(p => p.ProductName.Substring(Math.Max(0, p.ProductName.Length - 3)))
+                .Concat(ListGenerators.CustomersList.Select(c => c.CustomerName.Substring(Math.Max(0, c.CustomerName.Length - 3))));
+        }
+        #endregion
+
+        #region Partitioning Operators
+        static void PartitioningOperators()
+        {
+            Console.WriteLine("=== Partitioning Operators ===");
+
+            int[] numbers = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+
+            // 1- first 3 orders men customers in Washington
+            var first3Orders = ListGenerators.CustomersList.Where(c => c.City == "Washington")
+                .SelectMany(c => c.Orders).Take(3);
+
+            // 2- kol orders men Washington bas skip awel 2
+            var skip2Orders = ListGenerators.CustomersList.Where(c => c.City == "Washington")
+                .SelectMany(c => c.Orders).Skip(2);
+
+            // 3- take while number >= position
+            var posCheck = numbers.TakeWhile((n, i) => n >= i);
+
+            // 4- skip while not divisible by 3
+            var divisible3 = numbers.SkipWhile(n => n % 3 != 0);
+
+            // 5- skip while number >= position
+            var lessThanPos = numbers.SkipWhile((n, i) => n >= i);
+        }
+        #endregion
+
+        #region Quantifiers
+        static void Quantifiers()
+        {
+            Console.WriteLine("=== Quantifiers ===");
+
+            // 1- any word feeh "ei"
+            var dict = System.IO.File.ReadAllLines("dictionary_english.txt");
+            var hasEi = dict.Any(w => w.Contains("ei"));
+
+            // 2- group products law fe category at least wahed out of stock
+            var someOutOfStock = from p in ListGenerators.ProductsList
+                                 group p by p.Category into g
+                                 where g.Any(p => p.UnitsInStock == 0)
+                                 select g;
+
+            // 3- group products law kolhom fe stock
+            var allInStock = from p in ListGenerators.ProductsList
+                             group p by p.Category into g
+                             where g.All(p => p.UnitsInStock > 0)
+                             select g;
+        }
+        #endregion
+
+        #region Grouping Operators
+        static void GroupingOperators()
+        {
+            Console.WriteLine("=== Grouping Operators ===");
+
+            // group numbers 3ala remainder % 5
+            List<int> numbers = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            var groups = from n in numbers
+                         group n by n % 5;
+
+            // group words 3ala awel 7arf
+            var dict = System.IO.File.ReadAllLines("dictionary_english.txt");
+            var groupedWords = from w in dict
+                               group w by w[0];
+
+            // custom comparer 3ashan el words bel same chars tkoun group
+            string[] arr = { "from", "salt", "earn", "last", "near", "form" };
+            var anagramGroups = arr.GroupBy(w => new string(w.OrderBy(c => c).ToArray()));
+        }
+        #endregion
+    }
+}
